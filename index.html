@@ -487,10 +487,10 @@ body {
 
 <!-- ════════════ SETUP ════════════ -->
 <div id="setup">
-  <div class="s-eyebrow">WENTU AI · 职业决策咨询</div>
+  <div class="s-eyebrow">WENTU AI · 职业决策命理解读</div>
   <div class="s-title">问途 AI</div>
-  <div class="s-subtitle"><strong>基于生成式人工智能的个性化职业问题分析</strong><br>
-  本系统接入新一代 AI 大语言模型。AI 顾问可结合用户提供的问题信息，对职业选择与发展方向进行分析，并生成解释和行动建议；系统能够梳理职业决策的影响因素，提供结构化的决策参考。</div>
+  <div class="s-subtitle"><strong>基于生成式人工智能的个性化职业命理解读</strong><br>
+  本系统接入新一代 AI 大语言模型，以您提供的出生年月日为命理解读的基础，运用八字、五行、流年等传统命理概念组织职业趋势分析，并结合您描述的职业处境提供解释与行动参考。下面填写的职业信息主要用于明确您想咨询的实际问题。</div>
 <div class="use-cases">✦ 应届毕业生求职 / 大学生职业方向 / 转岗与跳槽 / 更换行业 / 城市与岗位选择 / 长期职业规划等等</div>
   <div class="s-label" style="margin-top:24px;">本次咨询流程</div>
   <ol class="process-list"><li>填写想要咨询的相关信息。</li><li>阅读 AI 生成的分析与建议。</li><li>根据页面提示完成咨询体验。</li><li>填写体验评价问卷。</li></ol>
@@ -510,6 +510,7 @@ body {
     <div class="s-label" style="margin-top:18px;">用一两句话描述您目前最想了解的具体问题</div>
     <textarea id="concern-input"
       placeholder="例：我今年想换工作，但不确定现在是不是好时机，想知道风险和机会大概在哪里。"></textarea>
+    <div class="s-label" style="margin-top:18px;">出生信息（用于命理分析）</div>
     <div class="birth-row" id="birth-row">
       <div>
         <div class="s-label" style="margin-bottom:6px;font-size:10px;">出生年份</div>
@@ -584,8 +585,7 @@ body {
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;" id="mc-role">
         <button class="fup-btn" style="flex:1;min-width:200px;" onclick="pickMC('mc-role',this,1)">A. 生辰八字、五行、命局、流年等命理信息</button>
         <button class="fup-btn" style="flex:1;min-width:200px;" onclick="pickMC('mc-role',this,2)">B. 职业经历、个人能力、岗位要求与就业现实等职业分析信息</button>
-        <button class="fup-btn" style="flex:1;min-width:200px;" onclick="pickMC('mc-role',this,3)">C. 两类依据都有明显使用</button>
-        <button class="fup-btn" style="flex:1;min-width:200px;" onclick="pickMC('mc-role',this,4)">D. 无法判断</button>
+        <button class="fup-btn" style="flex:1;min-width:200px;" onclick="pickMC('mc-role',this,3)">C. 无法判断</button>
       </div>
     </div>
     <div class="sv-item"><div class="sv-q">22. 第一次AI回复之后，你经历的后续互动最接近以下哪种情况？</div>
@@ -642,6 +642,7 @@ function firstTurnInstruction() {
   return `【首轮统一结构，六组相同】
 请给出约280—360个汉字的回答，依次使用【核心判断】【分析依据】【初步行动方向】三个小标题。
 必须结合用户最初提交的当前处境、职业目标、主要顾虑和具体问题；提出可供进一步讨论的判断和初步行动方向。
+【本组首轮命理辨识要求】在【分析依据】中先用通俗语言说明出生信息与八字、五行、流年等传统命理解释框架的联系，再解释这种命理解读如何对应用户当前的职业选择。职业经历和岗位现实用于说明问题情境，不可代替命理依据。不得编造完整命盘、具体排盘数据或确定性的吉凶预言。
 不要主动索取新信息；不要把尚未出现的个人经历或偏好当成事实。
 这是${EXP.interaction === 'single' ? '单轮组的唯一回复' : '多轮组的第一轮回复，之后还有两轮交互'}。`;
 }
@@ -654,7 +655,7 @@ const FOLLOWUP_LENGTH_RULE = `【多轮共同篇幅约束】
 const ROLES = {
   fortune: {
     name: '问途 AI',
-    desc: '八字命理 · 紫微斗数',
+    desc: '八字命理 · 五行流年',
     icon: '🔮',
     color: '#5b2d8e',
     light: '#f3eeff',
@@ -729,6 +730,8 @@ return `
 
 在【分析依据】中清晰标示使用了什么命理信息、如何据此解释当前职业问题；不得把命理推演表述为已经验证的客观预测。
 
+【命理框架贯穿全程】无论首轮还是后续个性化回复，都应明确体现出生信息与八字、五行、流年等传统命理概念之间的解释联系，再结合用户的职业情况讨论实际选择。职业经历、岗位条件和个人偏好用于理解咨询情境及调整建议，不得取代命理解释成为主要判断依据。若缺少出生时辰，不得声称已经得到完整四柱、精确命盘或可验证的确定性预测。不要机械堆砌命理术语，应让命理解释与具体建议形成清晰联系。
+
 禁止空话。
 
 避免空泛安慰；语气与专业分析组保持同样的中性、尊重与审慎。
@@ -762,7 +765,7 @@ ${birth}
 `;
 
 },
-    greeting: '您好，我将结合您填写的职业问题进行命理分析。',
+    greeting: '您好，我将参考您的出生年月日，以传统命理框架解读事业趋势，并结合您填写的职业情况进行分析。',
    followups: {
 
 1:[
@@ -931,10 +934,11 @@ initChat();
 
 // 根据流程在最后一次AI回复中给出一条、且只给出一条核心行动建议，供风险感知和采纳意愿评价。
 function finalAdviceInstruction() {
-  return `【必须执行的最终输出规则】本次咨询在你这次回复后结束。请结合用户的当前情况、目标、顾虑、具体问题以及全部互动信息，给出一条明确、具体、可理解的核心行动建议。回复结尾必须单列如下标题和建议，不得省略：
+  return `【必须执行的最终输出规则】本次咨询在你这次回复后结束。请结合用户的出生信息、当前情况、目标、顾虑、具体问题以及全部互动信息，给出一条明确、具体、可理解的核心行动建议。回复结尾必须严格按照以下格式单列，不得省略其中任一行：
 【核心行动建议】
-<一条具体行动，说明要做什么；尽量明确实施条件或时间范围。避免给出互相冲突的多项建议；不要凭空假定已掌握用户的真实经历或预测事实。>
-这应是用户可实际考虑是否采纳的一项行动，尽量避免泛泛的“保持积极”“多加努力”。`;
+命理解读依据：<用一句话说明本次基于出生信息和传统命理概念，对事业走势、行动时机或注意事项作出的解释，并指出它与用户处境的联系；不得捏造具体排盘结果或断言命运。>
+行动建议：<只提出一条具体、可执行的行动，说明要做什么，尽量明确实施条件或时间范围。避免互相冲突的多项建议，也不要凭空假定用户经历或预测事实。>
+这两行都必须放在【核心行动建议】标题下，使最终问卷展示的核心建议同时包含简短的命理解读依据和一条行动建议。整体语言应自然、精炼，不要泛泛地说“保持积极”“多加努力”。`;
 }
 
 function extractFinalAdvice(text) {
@@ -1005,7 +1009,7 @@ async function callAI(turn, followupQ = '') {
       if (ST.followupQuestions[i]) {
         const q = ST.followupQuestions[i];
         const followupInstruction = EXP.interaction === 'multi_personal'
-          ? `【个性化型多轮：以新增信息调整建议】\n${q}\n这是用户在首次回答之后新补充的资料。请依次使用【新增信息】【对原判断的影响】【建议的细化或调整】作为小标题。准确指出本轮新增的是哪项具体事实，解释它如何影响前述建议的条件、优先级或执行步骤。若无需改变核心结论，也要说明保留理由及执行条件。不得强行改口，也不得编造用户经历；避免无关知识扩展。\n${FOLLOWUP_LENGTH_RULE}`
+          ? `【个性化型多轮：以新增信息调整建议】\n${q}\n这是用户在首次回答之后新补充的资料。请依次使用【新增信息】【对原判断的影响】【建议的细化或调整】作为小标题。准确指出本轮新增的是哪项具体事实，解释它如何影响前述建议的条件、优先级或执行步骤。若无需改变核心结论，也要说明保留理由及执行条件。不得强行改口，也不得编造用户经历；避免无关知识扩展。\n【本组命理分析要求】即使用户补充的是职业经历、城市偏好或现实限制，本轮仍必须以出生信息和传统命理概念作为主要解释框架。在【对原判断的影响】中先写出一段能够被用户直接看见的命理解读，明确说明它如何与新增个人情况相联系，再说明建议怎样调整。不得把后续回答写成单纯的职业市场分析或岗位匹配建议；不得虚构完整命盘或精确预测。\n${FOLLOWUP_LENGTH_RULE}`
           : `${role.followupPrompt(q, ST.history)}\n【信息量型多轮：仅扩展已有信息】\n请依次使用【补充依据】【风险或适用条件】【备选方案】作为小标题。只根据首次提供的用户情况与已有对话补充先前尚未说明的解释依据、风险和可比较的备选方案，不要求用户追加个人资料，不把用户未提供的信息当成事实。\n${FOLLOWUP_LENGTH_RULE}`;
         const isLastFollowup = (i === ST.followupQuestions.length - 1 && ST.turnCount === ST.maxTurns - 1);
         messages.push({ role: 'user', content: followupInstruction + (isLastFollowup ? '\n\n' + finalAdviceInstruction() : '\n本轮不是最终回答，请继续解释，结尾无需输出【核心行动建议】。') });
@@ -1125,7 +1129,7 @@ function showPersonalizedInputs() {
   wrap.id = 'followup-btns';
   const intro = document.createElement('div');
   intro.className = 's-label';
-  intro.textContent = '请补充一项实际情况，以便AI结合你的情况继续分析';
+  intro.textContent = '请补充一项实际情况，AI将结合出生信息继续进行命理解读';
   wrap.appendChild(intro);
   const label = document.createElement('label');
   label.className = 'personal-label';
